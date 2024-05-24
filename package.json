@@ -1,0 +1,15 @@
+{
+  "name": "practica-7-backend",
+  "version": "1.0.0",
+  "main": "Main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Marisel",
+  "license": "ISC",
+  "description": "Mi primera API",
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
