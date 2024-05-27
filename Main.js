@@ -1,6 +1,10 @@
 console.log("Hola Mundo con Node JS")
+//forma antigua de llamar librerias
+//const express = require('express' )
 
-const express = require('express' )
+//forma actual con ECMAscript 6 de llamar librerias
+import express from "express"
+
 const app = express()
 const port = 3000
 
@@ -14,9 +18,72 @@ const port = 3000
 // - el callback recibe 2 parametros:
 // - req: request o la peticion
 // - res: responde o la respuesta
-app.get('/', (req, res) => {
-    res.send('Hola Mundo')
+app.get('/api/v1/usuarios', (req, res) => {
+
+    const respuesta = {
+        mensaje: "Lista de usuarios"
+    }
+
+    res.json(respuesta)
 })
+app.get('/api/v1/usuarios/:cedula', (req, res) =>{
+
+    console.log(req.params)
+    const cedula = req.params.cedula
+
+    res.json({
+        mensaje: `usuario obtenido con la cedula:${cedula}`
+    })
+})
+
+// post: crear datos
+app.post('/api/v1/usuarios', (req, res) =>{
+    res.json({
+        mensaje: 'usuario guardado'
+    })
+        
+})
+app.get('/apiv1/usuarios/cedula/:', (req,res) =>{
+
+})
+
+
+// put: actualizar todos los
+// datos de un elemento
+app.put('/api/v1/usuarios/:cedula', (req, res) =>{
+
+    const cedula = req.params.cedula
+
+    res.json({
+        
+        mensaje: `usuario con cedula ${cedula} actualizado` 
+    })
+        
+})
+
+// patch: actualiza algunos campos
+// de nuestro elemento
+app.patch('/api/v1/usuarios/:cedula', (req, res) =>{
+
+    const cedula = req.params.cedula
+
+    res.json({
+        mensaje: `edad del usuario con cedula ${cedula} actualizada`
+    })
+        
+})
+// delete: eliminar un elemento
+app.delete('/api/v1/usuarios/:cedula', (req, res) =>{
+
+    const cedula =req.params.cedula
+    res.json({
+        mensaje: `usuario con cedula ${cedula}  eliminado`
+    })
+        
+})
+
+
+
 
 // Le indicamos a nuestra API que empiece a escuchar peticiones
 // en el puerto 3000 y cuando se encienda nos muestre el mensaje
