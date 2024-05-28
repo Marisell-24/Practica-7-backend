@@ -3,10 +3,15 @@ console.log("Hola Mundo con Node JS")
 //const express = require('express' )
 
 //forma actual con ECMAscript 6 de llamar librerias
-import express from "express"
+import bodyParser from "body-parser"
+import express, { query } from "express"
+
+
 
 const app = express()
 const port = 3000
+
+app.use(bodyParser.json())
 
 // ---------------Endpoint----------------------
 // con get le indicamos que nuestra API acepta
@@ -19,6 +24,8 @@ const port = 3000
 // - req: request o la peticion
 // - res: responde o la respuesta
 app.get('/api/v1/usuarios', (req, res) => {
+    
+    console.log(req.query)
 
     const respuesta = {
         mensaje: "Lista de usuarios"
@@ -38,6 +45,9 @@ app.get('/api/v1/usuarios/:cedula', (req, res) =>{
 
 // post: crear datos
 app.post('/api/v1/usuarios', (req, res) =>{
+
+    console.log(req.body)
+
     res.json({
         mensaje: 'usuario guardado'
     })
