@@ -5,7 +5,7 @@ console.log("Hola Mundo con Node JS")
 //forma actual con ECMAscript 6 de llamar librerias
 import bodyParser from "body-parser"
 import express, { query } from "express"
-
+import client from "./db.js"
 
 
 const app = express()
@@ -23,7 +23,14 @@ app.use(bodyParser.json())
 // - el callback recibe 2 parametros:
 // - req: request o la peticion
 // - res: responde o la respuesta
-app.get('/api/v1/usuarios', (req, res) => {
+app.get('/api/v1/usuarios', async(req, res) => {
+
+    await client.connect()
+
+    const db = client.db ("sample_mflix")
+   const user = db.collection("users")
+   const listaUsuarios = await user.find({}).toArray()
+   console.log(listaUsuarios)
     
     console.log(req.query)
 
