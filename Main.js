@@ -25,12 +25,22 @@ app.use(bodyParser.json())
 // - res: responde o la respuesta
 app.get('/api/v1/usuarios', async(req, res) => {
 
+    // 1. conectarnos a la base de dato
     await client.connect()
 
+    // 2. seleccionar  la db que vamos a utilzar
     const db = client.db ("sample_mflix")
+
+    // 3. se4leccionar la coleccion
    const user = db.collection("users")
+
+   // 4. hacer la consulta  =>query
    const listaUsuarios = await user.find({}).toArray()
+
    console.log(listaUsuarios)
+
+   // 5. cerrar la coleccion a la db
+    await client.close()
     
     console.log(req.query)
 
@@ -51,9 +61,30 @@ app.get('/api/v1/usuarios/:cedula', (req, res) =>{
 })
 
 // post: crear datos
-app.post('/api/v1/usuarios', (req, res) =>{
+app.post('/api/v1/usuarios', async (req, res) =>{
 
     console.log(req.body)
+    const userData = req.body
+// 1. conectarnos a la base de dato
+    await client.connect()
+
+// 2. seleccionar  la db que vamos a utilzar
+const db = client.db ("sample_mflix")
+
+// 3. se4leccionar la coleccion
+const user = db.collection("users")
+
+// 4. alacenar un usuario
+    await user.insertOne({
+    nombre: userData.nombre,
+    apellido: userData.apellido,
+    email: userData.email,
+    edad: userData.edad,
+})
+
+// 5. cerrar coneccion
+    await client.close()
+
 
     res.json({
         mensaje: 'usuario guardado'
