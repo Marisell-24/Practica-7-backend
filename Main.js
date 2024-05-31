@@ -6,7 +6,7 @@ console.log("Hola Mundo con Node JS")
 import bodyParser from "body-parser"
 import express, { query } from "express"
 import client from "./db.js"
-
+import { ObjectId } from 'mongodb'
 
 const app = express()
 const port = 3000
@@ -50,13 +50,30 @@ app.get('/api/v1/usuarios', async(req, res) => {
 
     res.json(respuesta)
 })
-app.get('/api/v1/usuarios/:cedula', (req, res) =>{
+
+// obtener un usuario
+app.get('/api/v1/usuarios/:id', async (req, res) =>{
 
     console.log(req.params)
-    const cedula = req.params.cedula
+    let id = req.params.id
 
+      // 1. conectarnos a la base de dato
+      await client.connect()
+
+      // 2. seleccionar  la db que vamos a utilzar
+      const db = client.db ("sample_mflix")
+  
+      // 3. seleccionar la coleccion
+     const usercollection = db.collection("users")
+
+    id = new ObjectId(id)
+    // 4. consulta
+    const user = await usercollection.findOne({
+        _id: id
+     })
+     await client.close()
     res.json({
-        mensaje: `usuario obtenido con la cedula:${cedula}`
+        mensaje: `usuario obtenido con el id: ${id}`
     })
 })
 
@@ -80,6 +97,11 @@ const user = db.collection("users")
     apellido: userData.apellido,
     email: userData.email,
     edad: userData.edad,
+    //ubicacion : userData.ubicacion
+    ubicacion: {
+        latitud: 14562,
+        longitud: 25468
+    }
 })
 
 // 5. cerrar coneccion
@@ -91,41 +113,83 @@ const user = db.collection("users")
     })
         
 })
-app.get('/apiv1/usuarios/cedula/:', (req,res) =>{
-
-})
 
 
 // put: actualizar todos los
 // datos de un elemento
-app.put('/api/v1/usuarios/:cedula', (req, res) =>{
+app.put('/api/v1/usuarios/:id', async (req, res) =>{
 
-    const cedula = req.params.cedula
+    let id = req.params.id
+    const userData = req.body
+
+        // 1. conectarnos a la base de dato
+        await client.connect()
+
+        // 2. seleccionar  la db que vamos a utilzar
+        const db = client.db ("sample_mflix")
+
+        // 3. se4leccionar la coleccion
+        const usercollection = db.collection("users")
+
+        id = new ObjectId(id)
+
+        // 4. realizar consulta a la db
+        await usercollection.updateOne(
+            { _id: id},
+            {
+                $set: {
+                    name: userData.name
+                }
+            }
+        )
+
+        // cerrar la conexion
+        await client.close()
 
     res.json({
         
-        mensaje: `usuario con cedula ${cedula} actualizado` 
+        mensaje: `usuario con id ${id} actualizado` 
     })
         
 })
 
 // patch: actualiza algunos campos
 // de nuestro elemento
-app.patch('/api/v1/usuarios/:cedula', (req, res) =>{
+app.patch('/api/v1/usuarios/:cedula', async (req, res) =>{
 
     const cedula = req.params.cedula
 
+    
     res.json({
         mensaje: `edad del usuario con cedula ${cedula} actualizada`
     })
-        
+
 })
 // delete: eliminar un elemento
-app.delete('/api/v1/usuarios/:cedula', (req, res) =>{
+app.delete('/api/v1/usuarios/:id', async(req, res) =>{
 
-    const cedula =req.params.cedula
+const id = req.params.id
+
+    // 1. conectarnos a la base de dato
+    await client.connect()
+
+    // 2. seleccionar  la db que vamos a utilzar
+    const db = client.db ("sample_mflix")
+
+    // 3. seleccionar la coleccion
+   const usercollection = db.collection("users")
+   id = new ObjectId
+   // 4. realizar consulta
+   await usercollection.deleteOne({
+    _id: id
+   })
+   // 5. cerrar conecexion
+   await client. close()
+
+
+    const cedulid =req.params._id
     res.json({
-        mensaje: `usuario con cedula ${cedula}  eliminado`
+        mensaje: `usuario con cedula ${id}  eliminado`
     })
         
 })
